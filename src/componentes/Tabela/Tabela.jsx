@@ -6,20 +6,22 @@ import LinhaTabela from '../LinhaTabela/LinhaTabela';
 export default function Tabela({status}) {
 
     const [dados, setDados] = useState([])
+    const dtAtual = new Date();
 
     useEffect(() => {
         axios.get("http://localhost:3000/posts")
             .then((response) => {
+
                 let teste = response.data
                 setDados(teste)
-
+                    
             }).catch((erro) => {
-                console.log(erro)
+                    console.log(erro)
             })
-
+    
     }, [dados])
 
-
+   
     return (
         <main className="container">
             <table>
@@ -37,9 +39,11 @@ export default function Tabela({status}) {
                 </thead>
                 <tbody>
                     {dados.map((dado) => (
+                        //só exibi registro do dia, dias anteriores não exibe. 
+                        dado.dataSep >= dtAtual.toLocaleDateString()&&(
                         dado.status === status && (
                             <LinhaTabela id={dado.id} pausado={dado.pausado} separador={dado.separador} numeroPedido={dado.numeroPedido} status={dado.status} tempoInicio={dado.tempoInicio} key={dado.id}/>
-                        )
+                        ))
                     ))}
                 </tbody>
             </table>

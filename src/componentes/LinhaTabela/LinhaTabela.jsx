@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import './LinhaTabela.css'
 
-export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado }) {
+export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado, dataSep }) {
 
     const [dados, setDados] = useState([])
     const [estadoPausa, setEstadoPausa] = useState(pausado)
@@ -41,6 +41,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             TempoDuracao: diferencaFormatada,
             status: true,
             pausado: estadoPausa,
+            dataSep:dados.dataSep,
             id: { e }
 
         }
@@ -108,7 +109,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             <td>{status === true ? "Concluido"
                 :
                 <div className="btnActions">
-                    <Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>
+                    {/*<Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>*/}
                     <Button variant="contained" color="error" value={id} onClick={(e) => finalizar(e.target.value)}>Finalizar</Button>
                 </div>
             }</td>

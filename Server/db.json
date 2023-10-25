@@ -1,15 +1,6 @@
 {
   "posts": [
-    {
-      "separador": "506 - RAPHAEL ROOSEVELT DINIZ",
-      "numeroPedido": "123",
-      "tempoInicio": "10:17:20",
-      "tempoFim": "10:17:41",
-      "TempoDuracao": "00:00:21",
-      "status": true,
-      "pausado": false,
-      "id": 1
-    }
+    
   ],
   "funcionarios": [
     {
