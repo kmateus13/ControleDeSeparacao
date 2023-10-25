@@ -33,8 +33,6 @@ export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, hora
   }, [horaInicio, pausado, horaPausada]);
 
 
-
-
   // ----------------------------------------------------------------------
 
 

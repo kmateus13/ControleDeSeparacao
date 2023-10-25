@@ -10,7 +10,7 @@ import { Done } from '@mui/icons-material';
 
 export default function Inputs() {
 
-    const [campoSeparador, setCampoSeparador] = useState('')
+    //const [campoSeparador, setCampoSeparador] = useState('')
     const [campoPedido, setCampoPedido] = useState('')
     const TempoInicio = new Date()
     const DataSep = new Date()
@@ -32,7 +32,7 @@ export default function Inputs() {
         }else{
             axios.post(`http://localhost:3000/posts`, informacoes)
             .then((response) => {
-                console.log('Novo vídeo adicionado com sucesso:', response.data);
+                console.log('Dados adicionados com sucesso:', response.data);
                 // Faça o que for necessário após o sucesso da requisição
             })
             .catch((error) => {

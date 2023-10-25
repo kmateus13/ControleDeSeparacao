@@ -28,7 +28,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
 
         const diferencaEmSegundos = (horasFimNum - horasInicioNum) * 3600 +
             (minutosFimNum - minutosInicioNum) * 60 +
-            (segundosFimNum - segundosInicioNum);
+            (segundosFimNum - segundosInicioNum) 
 
         const diferencaFormatada = new Date(diferencaEmSegundos * 1000).toISOString().substr(11, 8);
 
@@ -50,7 +50,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
         axios.put(`http://localhost:3000/posts/${e}`, dadosAtualizado)
             .then((response) => {
                 let resposta = response.data
-
+                    console.log(resposta)
             }).catch((erro) => {
                 console.log(erro)
             })
@@ -109,7 +109,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             <td>{status === true ? "Concluido"
                 :
                 <div className="btnActions">
-                    {/*<Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>*/}
+                    <Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>
                     <Button variant="contained" color="error" value={id} onClick={(e) => finalizar(e.target.value)}>Finalizar</Button>
                 </div>
             }</td>
