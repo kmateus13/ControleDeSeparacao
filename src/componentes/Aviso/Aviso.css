@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@100;400;500&display=swap');
+
+#txtAviso {
+    width: 100%;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 40px;
+    color: #D32F2F;
+    font-family: 'Gabarito','Times New Roman', Times, serif;
+    font-weight: 500;
+    animation: piscarAviso 1.5s infinite;
+    text-align: center;
+}
+
+
+@keyframes piscarAviso{
+    0%{opacity: 0;}
+    50%{opacity: 1;}
+    100%{opacity: 0;}
+}

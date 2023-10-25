@@ -1,0 +1,49 @@
+
+.container{
+    margin-top: 30px;
+    margin-bottom: 80px;
+}
+
+h1{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+th, td {
+    border: 1px solid #000;
+}
+
+th{
+    font-size: 25px;
+}
+
+td {
+    
+    text-align: center;
+}
+
+.circuloVermelho{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #D32F2F;
+    display: block;
+    margin: 0 auto;
+}
+.circuloVerde{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #00C853;
+    display: block;
+    margin: 0 auto;
+}

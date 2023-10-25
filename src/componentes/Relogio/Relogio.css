@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+#relogio{
+    font-size: 85px;
+    position: absolute;
+    color: #D32F2F;
+    font-family: 'Orbitron','Times New Roman', Times, serif;
+}
