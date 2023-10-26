@@ -94,7 +94,6 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             })
     }, [dados])
 
-
     return (
         <tr>
             <td>{separador}</td>
