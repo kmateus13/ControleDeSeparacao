@@ -3,10 +3,13 @@ import Cronometro from "../Cronometro/Cronometro";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import './LinhaTabela.css'
-import { Done, Edit } from "@mui/icons-material";
 import { FormControl } from '@mui/material';
 import { InputLabel } from '@mui/material';
 import { NativeSelect } from '@mui/material';
+import {IconButton} from "@mui/material";
+import  Edit from "@mui/icons-material/Edit";
+import  Done from "@mui/icons-material/Done";
+
 
 export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado}) {
 
@@ -186,10 +189,13 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
                     separador
                 )}
                 {status === false ? 
-                ( editing ? <Button variant="contained" startIcon={<Done />} color="error" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}>Salvar</Button> :
-                    <Button className="btnEditar" variant="contained" startIcon={<Edit />} color="error" onClick={() => setEditing(true)}>Editar</Button>
+                ( editing ? <IconButton  color="error" aria-label="salvar" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}><Done/></IconButton> :
+                //<Button size="small" variant="contained" startIcon={<Done />} color="error" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}>Salvar</Button> :
+                //<IconButton size="small" variant="contained" className="botao-de-erro" onClick={() => setEditing(true)}></IconButton>
+                <IconButton  className="botao-de-erro"  color="error" aria-label="editar" onClick={() => setEditing(true)}><Edit/></IconButton>
+
                 ) : null} 
-                 </div>       
+                 </div>    
             </td> 
             <td>{numeroPedido}</td>
             <td>{tempoInicio}</td>
@@ -203,7 +209,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
                 :
                 <div className="btnActions">
                     {/*<Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>*/}
-                    <Button variant="contained" color="error" value={id} onClick={(e) => finalizar(e.target.value)}>Finalizar</Button>
+                    <Button size="small" variant="contained" color="error" value={id} onClick={(e) => finalizar(e.target.value)}>Finalizar</Button>
                 </div>
             }</td>
         </tr>
