@@ -7,6 +7,7 @@ export default function Tabela({status}) {
 
     const [dados, setDados] = useState([])
     const dtAtual = new Date();
+    
 
     useEffect(() => {
         axios.get("http://localhost:3000/posts")

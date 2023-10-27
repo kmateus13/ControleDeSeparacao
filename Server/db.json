@@ -1,36 +1,6 @@
 {
   "posts": [
-    {
-      "separador": "241 - ALEXANDRE JULIAO MARTINS",
-      "numeroPedido": "235",
-      "tempoInicio": "09:20:40",
-      "tempoFim": "09:22:52",
-      "TempoDuracao": "00:02:12",
-      "status": true,
-      "dataSep": "26/10/2023",
-      "id": 1
-    },
-    {
-      "separador": "477 - DIEGO DE OLIVEIRA SANTIAGO",
-      "numeroPedido": "234534",
-      "tempoInicio": "09:22:58",
-      "tempoFim": "09:23:01",
-      "TempoDuracao": "00:00:03",
-      "status": true,
-      "dataSep": "26/10/2023",
-      "id": 2
-    },
-    {
-      "separador": "477 - DIEGO DE OLIVEIRA SANTIAGO",
-      "numeroPedido": "2353456",
-      "tempoInicio": "09:23:03",
-      "tempoFim": "09:23:10",
-      "TempoDuracao": "00:00:07",
-      "status": true,
-      "pausado": true,
-      "dataSep": "26/10/2023",
-      "id": 3
-    }
+    
   ],
   "funcionarios": [
     {
