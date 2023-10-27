@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import './LinhaTabela.css'
 import { Done, Edit } from "@mui/icons-material";
+import { FormControl } from '@mui/material';
+import { InputLabel } from '@mui/material';
+import { NativeSelect } from '@mui/material';
 
-export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado, dataSep }) {
+export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado}) {
 
     const [dados, setDados] = useState([])
     const [estadoPausa, setEstadoPausa] = useState(pausado)
@@ -14,6 +17,10 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
     const [editing, setEditing] = useState(false);
     const [separadorEditado, setSeparadorEditado] = useState(separador);
 
+    const [corDaLinha, setCorDaLinha] = useState("");
+
+    const [separadores, setSeparadores] = useState([]);
+    const [selectedSeparador, setSelectedSeparador] = useState('');
 
     function finalizar(e) {
         const tempoFim = new Date().toLocaleTimeString()
@@ -36,7 +43,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
 
         const diferencaFormatada = new Date(diferencaEmSegundos * 1000).toISOString().substr(11, 8);
 
-
+        
         let dadosAtualizado = {
             separador: separador,
             numeroPedido: numeroPedido,
@@ -79,28 +86,41 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             });
     }
 
-
     const pegarHoraPausada = (valor) => {
         setConteudoCronometro(valor)
     }
 
+    // Defina a quantidade de minutos desejada PARA A LINHA MUDAR DE COR
+    useEffect(() => {
+    if(conteudoCronometro >= "01:00:00"){
+        setCorDaLinha("corDaLinhaVermelha"); 
+    }else if(conteudoCronometro >= "00:35:00") 
+        setCorDaLinha("corDaLinhaAmarela"); 
+    else{
+        setCorDaLinha("")
+    }     
+    }, [conteudoCronometro]);
+
 
     useEffect(() => {
-
         axios.get(`http://localhost:3000/posts/${id}`)
             .then((response) => {
 
                 let resposta = response.data
                 setDados(resposta)
-
             }).catch((erro) => {
                 console.log(erro)
             })
     }, [dados])
 
+
+    // SALVA O NOME DEPOIS DE EDITADO NO JSON
     function salvarNome() {
-        axios
-            .patch(`http://localhost:3000/posts/${id}`, { separador: separadorEditado })
+        if (selectedSeparador ===""){
+            alert("Por favor, selecione um separador."); 
+        }else{
+            axios
+            .patch(`http://localhost:3000/posts/${id}`, { separador: selectedSeparador })
             .then((response) => {
                 console.log("Nome do separador atualizado com sucesso.");
                 // Desabilitar a edição após a atualização
@@ -109,26 +129,65 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             .catch((erro) => {
                 console.log(erro);
         });
+        } 
     }
 
+    // Faz uma solicitação GET para a API JSON-Server para obter os dados dos separadores
+    useEffect(() => {
+        axios.get('http://localhost:3000/funcionarios')
+            .then(response => {
+                // Define os dados dos separadores no estado
+                setSeparadores(response.data);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar os separadores:', error);
+            });
+    }, []);
+
+    const handleSeparadorChange = (event) => {
+        setSelectedSeparador(event.target.value);
+    };
+
     return (
-        <tr>
+        <tr className={corDaLinha}>
             <td>
             <div className="btnEditarEsep" >
             {editing ? (
                     <div>
-                        <input
+                        {/*<input
                             type="text"
                             value={separadorEditado}
                             onChange={(e) => setSeparadorEditado(e.target.value)}
-                        />
-                        <Button variant="contained" startIcon={<Done />} color="error" onClick={salvarNome}>Salvar</Button>
+                        />*/}
+                        <div className="inputSepadoresEdit">
+                        <FormControl fullWidth>
+                        <InputLabel variant="standard" htmlFor="uncontrolled-native">  
+                        </InputLabel>
+                        <NativeSelect
+                            value={selectedSeparador}
+                            inputProps={{
+                                name: 'separador',
+                                id: 'uncontrolled-native',
+                            }}
+                            
+                            onChange={handleSeparadorChange}
+                        >   
+                            <option>SELECIONE UM SEPARADOR</option>
+                            {separadores.map(separador => (
+                                <option  key={separador.id} value={separador.name}>
+                                    {separador.name}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                        </FormControl> 
+                        </div>
                     </div>
                 ) : (
                     separador
                 )}
-                {status === false ? (
-                    <Button variant="contained" startIcon={<Edit />} color="error" onClick={() => setEditing(true)}>Editar</Button>
+                {status === false ? 
+                ( editing ? <Button variant="contained" startIcon={<Done />} color="error" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}>Salvar</Button> :
+                    <Button className="btnEditar" variant="contained" startIcon={<Edit />} color="error" onClick={() => setEditing(true)}>Editar</Button>
                 ) : null} 
                  </div>       
             </td> 

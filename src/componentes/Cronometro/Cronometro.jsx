@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+
 export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, horaPausada }) {
   const [tempoDecorrido, setTempoDecorrido] = useState("00:00:00");
   
@@ -7,7 +8,7 @@ export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, hora
   useEffect(() => {
     if (!horaPausada) {
       if (!pausado) {
-        const interval = setInterval(() => {
+          const interval = setInterval(() => {
           const [horas, minutos, segundos] = horaInicio.split(':').map(Number);
           const horaDeInicio = new Date();
           const horaAtual = new Date();
@@ -85,7 +86,8 @@ export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, hora
   }, [pegarHoraPausada, tempoDecorrido, horaFormatada, horaPausada])
 
   return (
-    <div>{horaPausada ? horaFormatada : tempoDecorrido}</div>
+    <div>{horaPausada ? horaFormatada : tempoDecorrido}
+    </div>
     
   )
   

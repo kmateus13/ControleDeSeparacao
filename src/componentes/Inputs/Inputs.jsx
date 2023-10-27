@@ -92,7 +92,7 @@ export default function Inputs() {
                 <span>
                 <TextField variant="filled" label="Número de pedido" type="text" id="numeroPedido" value={campoPedido} onChange={(e) => setCampoPedido(e.target.value)} />
                 </span>
-                <Button variant="contained" id="nomeSeparador" startIcon={<Done />} onClick={() => enviarInformacoes()}>INICIAR</Button>
+                <Button variant="contained" id="nomeSeparador" color='error' startIcon={<Done />} onClick={() => enviarInformacoes()}>INICIAR</Button>
             </div>
         </header>
     )

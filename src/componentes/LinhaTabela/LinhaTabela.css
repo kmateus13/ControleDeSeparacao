@@ -16,8 +16,24 @@ td{
     align-items: center;
     width: 100%;
     gap: 10px;
+  
+}
+.corDaLinhaAmarela{
+    background-color: #FDD835;
 }
 
-.btnEditarEsep input{
-    margin-right: 30px;
+.corDaLinhaVermelha{
+    background-color: #E57373;
+    color: white;
+}
+
+
+.inputSepadoresEdit{
+   
+    width: 350px;
+}
+
+.btnEditar{
+    padding: 0;
+    border-radius: 50%;
 }

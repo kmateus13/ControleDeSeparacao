@@ -8,7 +8,7 @@ export default function Aviso() {
 
     useEffect(() => {
         setInformacao("EXPERIMENTAL");
-        setVersao("V.23-10.1.0.3 (aberta)");
+        setVersao("V.23-10.1.0.5 (aberta)");
     }, []);
 
     return (
