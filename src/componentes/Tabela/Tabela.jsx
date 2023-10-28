@@ -28,6 +28,7 @@ export default function Tabela({status}) {
             <table>
                 <thead>
                     <tr>
+                        {!status && <th>Excluir</th>}
                         <th>Separador</th>
                         <th>Numero do Pedido</th>
                         <th>Tempo de Inicio</th>

@@ -65,24 +65,21 @@ export default function Inputs() {
         <header>
             <h1>CONTROLE DE TEMPO DE SERAPARAÇÃO</h1>
             <div className={styles.container}>
-
                 <span>
-                <FormControl fullWidth>
+                <FormControl >
                         <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                            
                         </InputLabel>
-                        <NativeSelect
+                        <NativeSelect 
                             value={selectedSeparador}
                             inputProps={{
                                 name: 'separador',
                                 id: 'uncontrolled-native',
                             }}
-                            
                             onChange={handleSeparadorChange}
-                        >   
+                            > 
                             <option value="">SELECIONE UM SEPARADOR</option>
                             {separadores.map(separador => (
-                                <option  key={separador.id} value={separador.name}>
+                                <option key={separador.id} value={separador.name}>
                                     {separador.name}
                                 </option>
                             ))}
@@ -96,7 +93,4 @@ export default function Inputs() {
             </div>
         </header>
     )
-    //<label htmlFor="nomeSeparador">Nome do Separador: </label>
-    //<input type="text" id="nomeSeparador" value={campoSeparador} onChange={(e) => setCampoSeparador(e.target.value)} />
-    //<label htmlFor="numeroPedido">Numero do Pedido: </label>
 }

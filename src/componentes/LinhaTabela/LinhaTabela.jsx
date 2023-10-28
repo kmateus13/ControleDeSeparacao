@@ -6,17 +6,22 @@ import './LinhaTabela.css'
 import { FormControl } from '@mui/material';
 import { InputLabel } from '@mui/material';
 import { NativeSelect } from '@mui/material';
-import {IconButton} from "@mui/material";
-import  Edit from "@mui/icons-material/Edit";
-import  Done from "@mui/icons-material/Done";
+import { IconButton } from "@mui/material";
+import Edit from "@mui/icons-material/Edit";
+import Done from "@mui/icons-material/Done";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Checkbox from '@mui/material/Checkbox';
 
 
-export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado}) {
+export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, status, pausado }) {
+
+    const [registrosSelecionados, setRegistrosSelecionados] = useState([]);
+
 
     const [dados, setDados] = useState([])
     const [estadoPausa, setEstadoPausa] = useState(pausado)
     const [conteudoCronometro, setConteudoCronometro] = useState()
-    
+
     const [editing, setEditing] = useState(false);
     const [separadorEditado, setSeparadorEditado] = useState(separador);
 
@@ -42,11 +47,11 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
 
         const diferencaEmSegundos = (horasFimNum - horasInicioNum) * 3600 +
             (minutosFimNum - minutosInicioNum) * 60 +
-            (segundosFimNum - segundosInicioNum) 
+            (segundosFimNum - segundosInicioNum)
 
         const diferencaFormatada = new Date(diferencaEmSegundos * 1000).toISOString().substr(11, 8);
 
-        
+
         let dadosAtualizado = {
             separador: separador,
             numeroPedido: numeroPedido,
@@ -55,12 +60,10 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             tempoDuracao: diferencaFormatada,
             status: true,
             pausado: estadoPausa,
-            dataSep:dados.dataSep,
+            dataSep: dados.dataSep,
             id: { e }
 
         }
-
-
         axios.put(`http://localhost:3000/posts/${e}`, dadosAtualizado)
             .then((response) => {
                 let resposta = response.data
@@ -75,7 +78,7 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
         // Inicie a solicitação com o estado atual
         const novoEstadoPausa = !pausado;
 
-        axios.patch(`http://localhost:3000/posts/${e}`, { pausado: novoEstadoPausa, horaPausada: conteudoCronometro})
+        axios.patch(`http://localhost:3000/posts/${e}`, { pausado: novoEstadoPausa, horaPausada: conteudoCronometro })
             .then((response) => {
                 let resposta = response.data;
                 console.log(resposta);
@@ -95,13 +98,13 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
 
     // Defina a quantidade de minutos desejada PARA A LINHA MUDAR DE COR
     useEffect(() => {
-    if(conteudoCronometro >= "01:00:00"){
-        setCorDaLinha("corDaLinhaVermelha"); 
-    }else if(conteudoCronometro >= "00:35:00") 
-        setCorDaLinha("corDaLinhaAmarela"); 
-    else{
-        setCorDaLinha("")
-    }     
+        if (conteudoCronometro >= "01:00:00") {
+            setCorDaLinha("corDaLinhaVermelha");
+        } else if (conteudoCronometro >= "00:35:00")
+            setCorDaLinha("corDaLinhaAmarela");
+        else {
+            setCorDaLinha("")
+        }
     }, [conteudoCronometro]);
 
 
@@ -119,20 +122,20 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
 
     // SALVA O NOME DEPOIS DE EDITADO NO JSON
     function salvarNome() {
-        if (selectedSeparador ===""){
-            alert("Por favor, selecione um separador."); 
-        }else{
+        if (selectedSeparador === "") {
+            alert("Por favor, selecione um separador.");
+        } else {
             axios
-            .patch(`http://localhost:3000/posts/${id}`, { separador: selectedSeparador })
-            .then((response) => {
-                console.log("Nome do separador atualizado com sucesso.");
-                // Desabilitar a edição após a atualização
-                setEditing(false);
-            })
-            .catch((erro) => {
-                console.log(erro);
-        });
-        } 
+                .patch(`http://localhost:3000/posts/${id}`, { separador: selectedSeparador })
+                .then((response) => {
+                    console.log("Nome do separador atualizado com sucesso.");
+                    // Desabilitar a edição após a atualização
+                    setEditing(false);
+                })
+                .catch((erro) => {
+                    console.log(erro);
+                });
+        }
     }
 
     // Faz uma solicitação GET para a API JSON-Server para obter os dados dos separadores
@@ -151,52 +154,94 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
         setSelectedSeparador(event.target.value);
     };
 
+    const toggleSelecionarRegistro = (id) => {
+        if (registrosSelecionados.includes(id)) {
+            // Se o registro já estiver selecionado, remova-o
+            setRegistrosSelecionados(registrosSelecionados.filter((registroId) => registroId !== id));
+        } else {
+            // Se o registro não estiver selecionado, adicione-o
+            setRegistrosSelecionados([...registrosSelecionados, id]);
+        }
+    };
+
+    const excluirRegistrosSelecionados = () => {
+        registrosSelecionados.forEach((id) => {
+            // Envie solicitação de exclusão para o servidor com o id do registro
+            axios.delete(`http://localhost:3000/posts/${id}`)
+                .then((response) => {
+                    // Registro excluído com sucesso, pode atualizar o estado ou fazer outras ações
+                    console.log(`Registro ${id} excluído.`);
+                })
+                .catch((erro) => {
+                    console.error(`Erro ao excluir registro ${id}:`, erro);
+                });
+        });
+
+        // Limpe a lista de registros selecionados
+        setRegistrosSelecionados([]);
+    };
+
     return (
         <tr className={corDaLinha}>
-            <td>
-            <div className="btnEditarEsep" >
-            {editing ? (
-                    <div>
-                        {/*<input
-                            type="text"
-                            value={separadorEditado}
-                            onChange={(e) => setSeparadorEditado(e.target.value)}
-                        />*/}
-                        <div className="inputSepadoresEdit">
-                        <FormControl fullWidth>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">  
-                        </InputLabel>
-                        <NativeSelect
-                            value={selectedSeparador}
-                            inputProps={{
-                                name: 'separador',
-                                id: 'uncontrolled-native',
+            {status === false ? (
+                <>
+                    <td>
+                        <input className="inputSelecionar"
+                            type="checkbox"
+                            onChange={() => toggleSelecionarRegistro(id)}
+                            checked={registrosSelecionados.includes(id)}
+                            style={{
+                                display: registrosSelecionados.includes(id) ? 'none' : 'block',
                             }}
-                            
-                            onChange={handleSeparadorChange}
-                        >   
-                            <option>SELECIONE UM SEPARADOR</option>
-                            {separadores.map(separador => (
-                                <option  key={separador.id} value={separador.name}>
-                                    {separador.name}
-                                </option>
-                            ))}
-                        </NativeSelect>
-                        </FormControl> 
-                        </div>
-                    </div>
-                ) : (
-                    separador
-                )}
-                {status === false ? 
-                ( editing ? <IconButton  color="error" aria-label="salvar" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}><Done/></IconButton> :
-                //<Button size="small" variant="contained" startIcon={<Done />} color="error" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}>Salvar</Button> :
-                //<IconButton size="small" variant="contained" className="botao-de-erro" onClick={() => setEditing(true)}></IconButton>
-                <IconButton  className="botao-de-erro"  color="error" aria-label="editar" onClick={() => setEditing(true)}><Edit/></IconButton>
+                        />
+                        {registrosSelecionados.includes(id) ? (
+                            <IconButton
+                                variant="contained"
+                                color="error"
+                                onClick={excluirRegistrosSelecionados}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        ) : null}
+                    </td>
+                </>
+            ) : null}
+            <td>
+                <div className="btnEditarEsep" >
+                    {editing ? (
+                        <div>
+                            <div className="inputSepadoresEdit">
+                                <FormControl fullWidth>
+                                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                                    </InputLabel>
+                                    <NativeSelect
+                                        value={selectedSeparador}
+                                        inputProps={{
+                                            name: 'separador',
+                                            id: 'uncontrolled-native',
+                                        }}
 
-                ) : null} 
-                 </div>    
-            </td> 
+                                        onChange={handleSeparadorChange}
+                                    >
+                                        <option>SELECIONE UM SEPARADOR</option>
+                                        {separadores.map(separador => (
+                                            <option key={separador.id} value={separador.name}>
+                                                {separador.name}
+                                            </option>
+                                        ))}
+                                    </NativeSelect>
+                                </FormControl>
+                            </div>
+                        </div>
+                    ) : (
+                        separador
+                    )}
+                    {status === false ?
+                        (editing ? <IconButton color="error" aria-label="salvar" onClick={salvarNome} onChange={(e) => setSeparadorEditado(e.target.value)}><Done /></IconButton> :
+                            <IconButton className="botao-de-erro" color="error" aria-label="editar" onClick={() => setEditing(true)}><Edit /></IconButton>
+                        ) : null}
+                </div>
+            </td>
             <td>{numeroPedido}</td>
             <td>{tempoInicio}</td>
             <td>{dados.tempoDuracao ? dados.tempoDuracao : <Cronometro pegarHoraPausada={pegarHoraPausada} horaPausada={dados.horaPausada} horaInicio={tempoInicio} pausado={estadoPausa} />}</td>

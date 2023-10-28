@@ -1,6 +1,6 @@
 td{
-    font-size: 25px;
-    padding: 5px 0;
+    font-size: 20px;
+    padding: 0;
 }
 
 .btnActions{
@@ -29,11 +29,17 @@ td{
 
 
 .inputSepadoresEdit{
-   
     width: 350px;
 }
 
 .btnEditar{
     padding: 0;
     border-radius: 50%;
+}
+
+.inputSelecionar{
+    margin: 0 auto;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
 }
