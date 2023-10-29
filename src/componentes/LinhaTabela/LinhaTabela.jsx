@@ -57,7 +57,8 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             numeroPedido: numeroPedido,
             tempoInicio: tempoInicio,
             tempoFim: tempoFim,
-            tempoDuracao: diferencaFormatada,
+            tempoReal: conteudoCronometro,
+            tempoDuracao:diferencaFormatada,
             status: true,
             pausado: estadoPausa,
             dataSep: dados.dataSep,
@@ -71,6 +72,8 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             }).catch((erro) => {
                 console.log(erro)
             })
+
+            localStorage.removeItem(id)
     }
 
 
@@ -78,14 +81,14 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
         // Inicie a solicitação com o estado atual
         const novoEstadoPausa = !pausado;
 
-        axios.patch(`http://localhost:3000/posts/${e}`, { pausado: novoEstadoPausa, horaPausada: conteudoCronometro })
+        axios.patch(`http://localhost:3000/posts/${e}`, { pausado: novoEstadoPausa, horaPausada: true })
             .then((response) => {
                 let resposta = response.data;
                 console.log(resposta);
 
                 // Atualize o estado após a resposta da solicitação ser bem-sucedida
                 setEstadoPausa(novoEstadoPausa);
-
+                localStorage.setItem(id, conteudoCronometro)
             })
             .catch((erro) => {
                 console.log(erro);
@@ -165,21 +168,31 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
     };
 
     const excluirRegistrosSelecionados = () => {
-        registrosSelecionados.forEach((id) => {
-            // Envie solicitação de exclusão para o servidor com o id do registro
-            axios.delete(`http://localhost:3000/posts/${id}`)
-                .then((response) => {
-                    // Registro excluído com sucesso, pode atualizar o estado ou fazer outras ações
-                    console.log(`Registro ${id} excluído.`);
-                })
-                .catch((erro) => {
-                    console.error(`Erro ao excluir registro ${id}:`, erro);
-                });
-        });
+        
 
-        // Limpe a lista de registros selecionados
-        setRegistrosSelecionados([]);
+
+        if(window.confirm("deseja realmente deletar ?")){
+            registrosSelecionados.forEach((id) => {
+                // Envie solicitação de exclusão para o servidor com o id do registro
+                axios.delete(`http://localhost:3000/posts/${id}`)
+                    .then((response) => {
+                        // Registro excluído com sucesso, pode atualizar o estado ou fazer outras ações
+                        console.log(`Registro ${id} excluído.`);
+                        localStorage.delete(id)
+                    })
+                    .catch((erro) => {
+                        console.error(`Erro ao excluir registro ${id}:`, erro);
+                    });
+            });
+    
+            // Limpe a lista de registros selecionados
+            setRegistrosSelecionados([]);
+        }
+        
     };
+
+
+
 
     return (
         <tr className={corDaLinha}>
@@ -220,12 +233,12 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
                                             name: 'separador',
                                             id: 'uncontrolled-native',
                                         }}
-
+                                       style={{margin: "0 auto"}}
                                         onChange={handleSeparadorChange}
                                     >
                                         <option>SELECIONE UM SEPARADOR</option>
                                         {separadores.map(separador => (
-                                            <option key={separador.id} value={separador.name}>
+                                            <option key={separador.id} value={separador.name} >
                                                 {separador.name}
                                             </option>
                                         ))}
@@ -244,16 +257,16 @@ export default function LinhaTabela({ id, separador, numeroPedido, tempoInicio, 
             </td>
             <td>{numeroPedido}</td>
             <td>{tempoInicio}</td>
-            <td>{dados.tempoDuracao ? dados.tempoDuracao : <Cronometro pegarHoraPausada={pegarHoraPausada} horaPausada={dados.horaPausada} horaInicio={tempoInicio} pausado={estadoPausa} />}</td>
+            <td>{dados.tempoReal ? dados.tempoReal : <Cronometro id={id} status={dados.status} pegarHoraPausada={pegarHoraPausada}  pausado={estadoPausa} />}</td>
             <td>{dados.tempoFim ? dados.tempoFim : "Aguardando..."}</td>
             <td>{dados.tempoDuracao ? dados.tempoDuracao : "Aguardando..."}</td>
             <td>
-                {status === true ? <div className="circuloVerde"></div> : <div className="circuloVermelho"></div>}
+                {status === true ? <div className="circuloVerde"></div> :( pausado ? <div className="circuloAmarelo"></div>: <div className="circuloVermelho"></div>)}
             </td>
             <td>{status === true ? "Concluido"
                 :
                 <div className="btnActions">
-                    {/*<Button variant="contained" color="error" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>*/}
+                    <Button variant="contained" size="small" color={pausado ? "warning" : "error"} className="botaoDinamico" value={id} onClick={(e) => pausar(e.target.value)}>{dados.pausado ? "Retomar" : "Pausar"}</Button>
                     <Button size="small" variant="contained" color="error" value={id} onClick={(e) => finalizar(e.target.value)}>Finalizar</Button>
                 </div>
             }</td>

@@ -1,6 +1,6 @@
 td{
     font-size: 20px;
-    padding: 0;
+    padding: px;
 }
 
 .btnActions{
@@ -42,4 +42,8 @@ td{
     cursor: pointer;
     width: 15px;
     height: 15px;
+}
+
+.botaoDinamico{
+    width: 87.38px;
 }

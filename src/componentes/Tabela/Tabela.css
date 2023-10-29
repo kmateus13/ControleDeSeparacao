@@ -47,3 +47,12 @@ td {
     display: block;
     margin: 0 auto;
 }
+
+.circuloAmarelo{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #FDD835;
+    display: block;
+    margin: 0 auto;
+}

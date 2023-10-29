@@ -1,43 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 
-export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, horaPausada }) {
-  const [tempoDecorrido, setTempoDecorrido] = useState("00:00:00");
-  
+export default function Cronometro({ pausado, pegarHoraPausada, id, status }) {
 
-  useEffect(() => {
-    if (!horaPausada) {
-      if (!pausado) {
-          const interval = setInterval(() => {
-          const [horas, minutos, segundos] = horaInicio.split(':').map(Number);
-          const horaDeInicio = new Date();
-          const horaAtual = new Date();
-
-          horaDeInicio.setHours(horas);
-          horaDeInicio.setMinutes(minutos);
-          horaDeInicio.setSeconds(segundos);
-
-          const tempoDecorridoMillis = horaAtual - horaDeInicio;
-          const hora = String(Math.floor(tempoDecorridoMillis / 3600000)).padStart(2, "0");
-          const minuto = String(Math.floor((tempoDecorridoMillis % 3600000) / 60000)).padStart(2, "0");
-          const segundo = String(Math.floor((tempoDecorridoMillis % 60000) / 1000)).padStart(2, "0");
-
-          setTempoDecorrido(`${hora}:${minuto}:${segundo}`);
-
-        }, 1000);
-
-        // Limpando o intervalo quando o componente é desmontado
-        return () => clearInterval(interval);
-      }
-    }
-
-  }, [horaInicio, pausado, horaPausada]);
-
-
-  // ----------------------------------------------------------------------
-
-
-  const [tempoAtual, setTempoAtual] = useState(converterParaSegundos(horaPausada));
+  const [tempoAtual, setTempoAtual] = useState(converterParaSegundos("00:00:00"));
 
   function converterParaSegundos(tempo) {
     if (tempo) {
@@ -47,16 +13,16 @@ export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, hora
       const segundos = parseInt(partes[2], 10);
       return horas + minutos + segundos;
     }
-    return 0; // Return a default value if tempo is undefined
+    return 0; 
   }
 
 
   useEffect(() => {
-    // Redefine a contagem sempre que horaPausada for atualizado
+    // Redefine a contagem sempre que localStorage for atualizado
 
-    setTempoAtual(converterParaSegundos(horaPausada));
+    setTempoAtual(converterParaSegundos(localStorage.getItem(id)));
 
-  }, [horaPausada]);
+  }, [id]);
 
   useEffect(() => {
     if (!pausado) {
@@ -76,19 +42,29 @@ export default function Cronometro({ horaInicio, pausado, pegarHoraPausada, hora
 
   const horaFormatada = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
- 
+
   useEffect(() => {
-    if (horaPausada) {
-      pegarHoraPausada(horaFormatada)
-    } else {
-      pegarHoraPausada(tempoDecorrido)
+
+    pegarHoraPausada(horaFormatada)
+
+  }, [horaFormatada, pegarHoraPausada])
+
+
+  useEffect(() => {
+    if (status === undefined) {
+     
+    } else if (status === false) {
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem(id, horaFormatada)
+      })
     }
-  }, [pegarHoraPausada, tempoDecorrido, horaFormatada, horaPausada])
+  }, [horaFormatada, id, status])
+
 
   return (
-    <div>{horaPausada ? horaFormatada : tempoDecorrido}
+    <div>{horaFormatada}
     </div>
-    
+
   )
-  
+
 }
